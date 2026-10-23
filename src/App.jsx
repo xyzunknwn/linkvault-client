@@ -4,6 +4,69 @@ import axios from 'axios'
 const API = axios.create({ baseURL: 'http://localhost:5001' })
 const SHORT_BASE = 'https://link-vault-k9li.onrender.com/'
 
+// Wireframe gear outline (purely decorative)
+function gearPath(teeth, rOuter, rInner) {
+  const pts = []
+  const step = (Math.PI * 2) / teeth
+  for (let i = 0; i < teeth; i++) {
+    const a = i * step
+    const o = [
+      [a - step * 0.28, rInner],
+      [a - step * 0.16, rOuter],
+      [a + step * 0.16, rOuter],
+      [a + step * 0.28, rInner],
+    ]
+    o.forEach(([t, r]) => pts.push(`${(r * Math.cos(t)).toFixed(2)},${(r * Math.sin(t)).toFixed(2)}`))
+  }
+  return `M${pts.join('L')}Z`
+}
+
+function Gear({ className, teeth = 16, size = 200 }) {
+  const rOuter = size / 2
+  const rInner = rOuter * 0.86
+  return (
+    <svg
+      className={`bg-gear ${className}`}
+      viewBox={`${-rOuter - 2} ${-rOuter - 2} ${size + 4} ${size + 4}`}
+      aria-hidden="true"
+    >
+      <path d={gearPath(teeth, rOuter, rInner)} />
+      <circle r={rInner * 0.68} />
+      <circle r={rInner * 0.2} />
+      {[0, 60, 120, 180, 240, 300].map((deg) => (
+        <line key={deg} x1="0" y1={rInner * 0.2} x2="0" y2={rInner * 0.68} transform={`rotate(${deg})`} />
+      ))}
+    </svg>
+  )
+}
+
+function TechBackground() {
+  return (
+    <div className="tech-bg" aria-hidden="true">
+      <svg className="bg-grid" width="100%" height="100%">
+        <defs>
+          <pattern id="dotgrid" width="24" height="24" patternUnits="userSpaceOnUse">
+            <circle cx="1" cy="1" r="1" fill="#444444" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#dotgrid)" />
+      </svg>
+      <Gear className="gear-a" teeth={18} size={360} />
+      <Gear className="gear-b" teeth={12} size={240} />
+      <Gear className="gear-c" teeth={14} size={180} />
+      <svg className="bg-circuit" viewBox="0 0 400 200" aria-hidden="true">
+        <path d="M0 40H80L110 70H220L250 40H400" />
+        <path d="M0 100H60L90 130H180V170H320L350 140H400" />
+        <path d="M120 0V30L150 60H260" />
+        <circle cx="80" cy="40" r="4" />
+        <circle cx="220" cy="70" r="4" />
+        <circle cx="180" cy="170" r="4" />
+        <circle cx="350" cy="140" r="4" />
+      </svg>
+    </div>
+  )
+}
+
 export default function App() {
   const [url, setUrl] = useState('')
   const [customAlias, setCustomAlias] = useState('')
@@ -57,6 +120,7 @@ export default function App() {
 
   return (
     <div className="page">
+      <TechBackground />
       <div className="container">
         <h1 className="title">LinkVault</h1>
 

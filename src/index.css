@@ -193,3 +193,59 @@ td { padding: 0.65rem 1rem 0.65rem 0; color: var(--text); max-width: 12rem; over
   .card, .result, .title { animation: none; }
   .btn, .input, .prefix-group { transition: none; }
 }
+
+/* ---------- Technical background ---------- */
+@keyframes slowRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+html, body { overflow-x: hidden; }
+
+.tech-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.tech-bg .bg-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 80%);
+  mask-image: radial-gradient(ellipse at center, #000 30%, transparent 80%);
+}
+
+.bg-gear,
+.bg-circuit {
+  position: absolute;
+  fill: none;
+  stroke: #444444;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.05;
+}
+.bg-gear * , .bg-circuit * { vector-effect: non-scaling-stroke; }
+.bg-circuit circle { fill: #444444; stroke: none; }
+
+.bg-gear { animation: slowRotate 60s linear infinite; }
+.gear-a { width: 520px; height: 520px; top: -140px; right: -140px; animation-duration: 60s; }
+.gear-b { width: 340px; height: 340px; bottom: -90px; left: -90px; animation-duration: 45s; animation-direction: reverse; }
+.gear-c { width: 240px; height: 240px; bottom: 18%; right: 6%; animation-duration: 35s; stroke: #333333; }
+
+.bg-circuit { width: 520px; max-width: 70vw; top: 12%; left: 2%; stroke: #333333; opacity: 0.05; }
+
+@media (max-width: 520px) {
+  .gear-a { width: 340px; height: 340px; top: -90px; right: -90px; }
+  .gear-b { width: 220px; height: 220px; }
+  .gear-c { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-gear { animation: none; }
+}
