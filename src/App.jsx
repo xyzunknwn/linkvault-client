@@ -128,7 +128,7 @@ export default function App() {
           <h2>Shorten a URL</h2>
           <form onSubmit={shorten} className="stack">
             <div>
-              <label className="label" htmlFor="url">Long URL</label>
+              <label className="label" htmlFor="url">Original URL</label>
               <input
                 id="url"
                 type="url"
@@ -140,7 +140,7 @@ export default function App() {
               />
             </div>
             <div>
-              <label className="label" htmlFor="alias">Custom alias (optional)</label>
+              <label className="label" htmlFor="alias">Custom aliasing (optional)</label>
               <div className="prefix-group">
                 <span className="prefix">{SHORT_BASE}</span>
                 <input
@@ -153,7 +153,7 @@ export default function App() {
               </div>
             </div>
             <div>
-              <label className="label" htmlFor="expires">Expires at (optional)</label>
+              <label className="label" htmlFor="expires">Expires at Date and Time(optional)</label>
               <input
                 id="expires"
                 type="datetime-local"
