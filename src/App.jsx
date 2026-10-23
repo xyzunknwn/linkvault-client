@@ -1,10 +1,13 @@
 import { useState } from 'react'
 import axios from 'axios'
 
-const API = axios.create({ baseURL: 'https://link-vault-k9li.onrender.com' })
+const API = axios.create({ baseURL: 'http://localhost:5001' })
+const SHORT_BASE = 'https://link-vault-k9li.onrender.com/'
 
 export default function App() {
   const [url, setUrl] = useState('')
+  const [customAlias, setCustomAlias] = useState('')
+  const [expiresAt, setExpiresAt] = useState('')
   const [shortUrl, setShortUrl] = useState('')
   const [genError, setGenError] = useState('')
   const [copied, setCopied] = useState(false)
@@ -21,8 +24,12 @@ export default function App() {
     setCopied(false)
     setLoading(true)
     try {
-      const { data } = await API.post('/api/shorten', { originalUrl: url })
-      setShortUrl(`${API.defaults.baseURL}/${data.shortId}`)
+      const payload = { originalUrl: url }
+      if (customAlias.trim()) payload.customAlias = customAlias.trim()
+      // datetime-local has no timezone; convert to an ISO UTC string
+      if (expiresAt) payload.expiresAt = new Date(expiresAt).toISOString()
+      const { data } = await API.post('/api/shorten', payload)
+      setShortUrl(`${SHORT_BASE}${data.shortId}`)
     } catch (err) {
       setGenError(err.response?.data?.error || 'Failed to shorten URL')
     } finally {
@@ -48,71 +55,95 @@ export default function App() {
     }
   }
 
-  const input = 'flex-1 rounded-lg border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500'
-  const btn = 'rounded-lg bg-indigo-600 px-5 py-2 font-medium text-white hover:bg-indigo-700 disabled:opacity-50'
-
   return (
-    <div className="min-h-screen bg-slate-100 py-12 px-4">
-      <div className="mx-auto max-w-2xl space-y-8">
-        <h1 className="text-center text-4xl font-bold text-indigo-700">LinkVault</h1>
+    <div className="page">
+      <div className="container">
+        <h1 className="title">LinkVault</h1>
 
-        <section className="rounded-xl bg-white p-6 shadow">
-          <h2 className="mb-4 text-xl font-semibold">Shorten a URL</h2>
-          <form onSubmit={shorten} className="flex gap-2">
-            <input
-              type="url"
-              required
-              className={input}
-              placeholder="https://example.com/very/long/url"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-            />
-            <button className={btn} disabled={loading}>
+        <section className="card">
+          <h2>Shorten a URL</h2>
+          <form onSubmit={shorten} className="stack">
+            <div>
+              <label className="label" htmlFor="url">Long URL</label>
+              <input
+                id="url"
+                type="url"
+                required
+                className="input"
+                placeholder="https://example.com/very/long/url"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="label" htmlFor="alias">Custom alias (optional)</label>
+              <div className="prefix-group">
+                <span className="prefix">{SHORT_BASE}</span>
+                <input
+                  id="alias"
+                  className="input"
+                  placeholder="my-alias"
+                  value={customAlias}
+                  onChange={(e) => setCustomAlias(e.target.value)}
+                />
+              </div>
+            </div>
+            <div>
+              <label className="label" htmlFor="expires">Expires at (optional)</label>
+              <input
+                id="expires"
+                type="datetime-local"
+                className="input"
+                value={expiresAt}
+                onChange={(e) => setExpiresAt(e.target.value)}
+              />
+            </div>
+            <button className="btn" disabled={loading}>
               {loading ? '...' : 'Shorten'}
             </button>
           </form>
-          {genError && <p className="mt-3 text-red-600">{genError}</p>}
+          {genError && <p className="error">{genError}</p>}
           {shortUrl && (
-            <div className="mt-4 flex items-center gap-2 rounded-lg bg-slate-50 p-3">
-              <a href={shortUrl} target="_blank" rel="noreferrer" className="flex-1 truncate text-indigo-600 underline">
-                {shortUrl}
-              </a>
-              <button onClick={copy} className={btn}>
+            <div className="result">
+              <a href={shortUrl} target="_blank" rel="noreferrer">{shortUrl}</a>
+              <button onClick={copy} className="btn">
                 {copied ? 'Copied!' : 'Copy to Clipboard'}
               </button>
             </div>
           )}
         </section>
 
-        <section className="rounded-xl bg-white p-6 shadow">
-          <h2 className="mb-4 text-xl font-semibold">Dashboard</h2>
-          <form onSubmit={lookup} className="flex gap-2">
+        <section className="card">
+          <h2>Dashboard</h2>
+          <form onSubmit={lookup} className="row">
             <input
               required
-              className={input}
+              className="input"
               placeholder="Enter short ID (e.g. ab12cd)"
               value={lookupId}
               onChange={(e) => setLookupId(e.target.value)}
             />
-            <button className={btn}>Get Stats</button>
+            <button className="btn">Get Stats</button>
           </form>
-          {statsError && <p className="mt-3 text-red-600">{statsError}</p>}
+          {statsError && <p className="error">{statsError}</p>}
           {stats && (
-            <table className="mt-4 w-full text-left text-sm">
-              <thead className="border-b text-slate-500">
+            <table>
+              <thead>
                 <tr>
-                  <th className="py-2">Short ID</th>
+                  <th>Short ID</th>
                   <th>Original URL</th>
                   <th>Clicks</th>
                   <th>Created</th>
+                  <th>Expires</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="py-2 font-mono">{stats.shortId}</td>
-                  <td className="max-w-[200px] truncate">{stats.originalUrl}</td>
-                  <td className="font-semibold">{stats.clicks}</td>
+                  <td>{stats.shortId}</td>
+                  <td>{stats.originalUrl}</td>
+                  <td>{stats.clicks}</td>
                   <td>{new Date(stats.createdAt).toLocaleString()}</td>
+                  <td>{stats.expiresAt ? new Date(stats.expiresAt).toLocaleString() : 'Never'}</td>
                 </tr>
               </tbody>
             </table>
