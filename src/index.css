@@ -216,7 +216,7 @@ html, body { overflow-x: hidden; }
 .tech-bg .bg-grid {
   position: absolute;
   inset: 0;
-  opacity: 0.05;
+  opacity: 0.4;
   -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 80%);
   mask-image: radial-gradient(ellipse at center, #000 30%, transparent 80%);
 }
@@ -225,20 +225,21 @@ html, body { overflow-x: hidden; }
 .bg-circuit {
   position: absolute;
   fill: none;
-  stroke: #444444;
+  stroke: #6b6b6b;
   stroke-width: 1;
   vector-effect: non-scaling-stroke;
-  opacity: 0.05;
+  opacity: 0.5;
 }
 .bg-gear * , .bg-circuit * { vector-effect: non-scaling-stroke; }
-.bg-circuit circle { fill: #444444; stroke: none; }
+.bg-circuit circle { fill: #6b6b6b; stroke: none; }
+.tech-bg .bg-grid circle { fill: #6b6b6b; }
 
 .bg-gear { animation: slowRotate 60s linear infinite; }
 .gear-a { width: 520px; height: 520px; top: -140px; right: -140px; animation-duration: 60s; }
 .gear-b { width: 340px; height: 340px; bottom: -90px; left: -90px; animation-duration: 45s; animation-direction: reverse; }
-.gear-c { width: 240px; height: 240px; bottom: 18%; right: 6%; animation-duration: 35s; stroke: #333333; }
+.gear-c { width: 240px; height: 240px; bottom: 18%; right: 6%; animation-duration: 35s; stroke: #5a5a5a; }
 
-.bg-circuit { width: 520px; max-width: 70vw; top: 12%; left: 2%; stroke: #333333; opacity: 0.05; }
+.bg-circuit { width: 520px; max-width: 70vw; top: 12%; left: 2%; stroke: #5a5a5a; opacity: 0.5; }
 
 @media (max-width: 520px) {
   .gear-a { width: 340px; height: 340px; top: -90px; right: -90px; }
