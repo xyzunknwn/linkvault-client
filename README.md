@@ -29,14 +29,14 @@ This project was developed as a technical assignment for the Junior Coordinator 
 
 ### 1. Clone the Repositories
 
-*Backend
+Backend
 
 ```bash
 git clone https://github.com/xyzunknwn/link-vault.git
 cd link-vault
 ```
 
-*Frontend
+Frontend
 
 ```bash
 git clone https://github.com/xyzunknwn/linkvault-client.git
