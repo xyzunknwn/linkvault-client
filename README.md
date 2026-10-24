@@ -27,10 +27,20 @@ This project was developed as a technical assignment for the Junior Coordinator 
 * Node.js installed on your machine.
 * A free MongoDB Atlas cluster (or a local MongoDB instance).
 
-### 1. Clone the Repository
+### 1. Clone the Repositories
+
+*Backend
+
 ```bash
 git clone https://github.com/xyzunknwn/link-vault.git
 cd link-vault
+```
+
+*Frontend
+
+```bash
+git clone https://github.com/xyzunknwn/linkvault-client.git
+cd linkvault-client
 ```
 
 ### 2. Backend Setup
